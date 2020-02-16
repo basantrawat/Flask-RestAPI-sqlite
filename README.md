@@ -7,8 +7,8 @@ REST API pulling data from a sqlite Database. Performing HTTP GET, POST, PUT, & 
 
 ## GET REQUEST
 For getting data from USERS table
-`curl -i http://localhost:5000/users`
-OR
+`curl -i http://localhost:5000/users`  
+OR  
 `curl -i http://localhost:5000/users/<user_id>`
 
 For getting data from PROFESSION table
