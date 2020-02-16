@@ -12,8 +12,7 @@ OR
 `curl -i http://localhost:5000/users/<user_id>`  
 
 
-For getting data from PROFESSION table   
-
+For getting data from PROFESSION table  
 `curl -i http://localhost:5000/profession`
 
 ## POST REQUEST
