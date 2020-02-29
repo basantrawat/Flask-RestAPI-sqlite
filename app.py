@@ -8,41 +8,43 @@ app = Flask(__name__)
 api = Api(app)
 
 class Users(Resource):
+    def __init__(self):
+        self.conn = db_connect.connect()
+        
     def get(self):
-        conn = db_connect.connect()
-        query = conn.execute("SELECT * FROM users")
+        query = self.conn.execute("SELECT * FROM users")
         return {'users': [i for i in query.cursor.fetchall()]}
     
     def post(self):       
-        user_id = request.form["id"]
         name = request.form["name"]
         address = request.form["address"]
         dob = request.form["dob"]
         
-        conn = db_connect.connect()
-    
-        query = f"""INSERT INTO users (ID, NAME, ADDRESS, DOB) VALUES ({user_id}, '{name}', '{address}', '{dob}')"""
-        conn.execute(query)
-
+        values = (name, address, dob)
+        query = """INSERT INTO users (NAME, ADDRESS, DOB) VALUES (?,?,?)"""
+        self.conn.execute(query, values)
         return ("Inserted Data of {}".format(name))
 
 class Profession(Resource):
+    def __init__(self):
+        self.conn = db_connect.connect()
+    
     def get(self):
-        conn = db_connect.connect()
-        query = conn.execute("SELECT * FROM profession;")
+        query = self.conn.execute("SELECT * FROM profession;")
         result = {'profession_details': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return jsonify(result)
 
 class UserById(Resource):
+    def __init__(self):
+        self.conn = db_connect.connect()
+    
     def get(self, id):
-        conn = db_connect.connect()
-        query = conn.execute("select * from users where ID =%d "  %int(id))
-        result = {'user': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
+        query = self.conn.execute("select * from users where ID =? ", (int(id)))
+        result = {f'user id {id}': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return jsonify(result)
 
     def delete(self,id):
-        conn = db_connect.connect()
-        conn.execute("DELETE from users where ID =%d "  %int(id))
+        self.conn.execute("DELETE from users where ID =?",(int(id)))
         return ("Deleted the User with ID : {}".format(id))
     
 
